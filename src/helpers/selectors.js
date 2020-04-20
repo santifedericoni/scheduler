@@ -1,9 +1,23 @@
-export function getAppointmentsForDay(state, selectedDay) {
+export  function getAppointmentsForDay(state, selectedDay) {
   const matchedDay = state.days.filter(day => day.name === selectedDay);
   return (matchedDay.length === 0 ? [] : matchedDay[0].appointments.map(appointmentID => state.appointments[appointmentID]));
 }
 
+export function getInterviewersByDay(state, day) {
 
+  let intArray = [];
+  let days = state.days.filter(item => {
+
+    if (item.name === day) {
+
+      intArray = item.interviewers.map(appt => {
+        let interviewers = state.interviewers[appt]
+        return interviewers;
+      })
+    }
+  })
+  return intArray;
+}
 
 
 export function getInterview(state, interview) {
