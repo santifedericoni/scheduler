@@ -23,7 +23,8 @@ export default function Application(props) {
         axios.get(`http://localhost:8080/api/interviewers`)
       ])
       .then ((all) => {
-        setState(Object.assign({}, state, { appointments: all[1].data, days: all[0].data, interviewers: all[2].data}))  
+        setState(Object.assign({}, state, { appointments: all[1].data, days: all[0].data, interviewers: all[2].data}))
+          console.log('test', state);
       })
     }, [] );
     
