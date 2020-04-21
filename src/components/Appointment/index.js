@@ -20,8 +20,7 @@ const CONFIRM = "CONFIRM";
 const EDITING = "EDITING";
 const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
-const DECREASE_DAYS_SPOTS = "DECREASE_DAYS_SPOTS";
-
+const ERROR_EDIT = "ERROR_EDIT";
 
 
 export default function Appointment(props) {
@@ -44,7 +43,7 @@ export default function Appointment(props) {
     })
   }
 
-  function deleteCard(name, interviewer) {
+  function deleteCard() {
     transition(DELETING)
     props.cancelInterview(props.id)
     .then (() => { 
@@ -53,7 +52,22 @@ export default function Appointment(props) {
     .catch(() => {
       transition(ERROR_DELETE,true)
     })
+  }
 
+
+  function edit(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    };
+    transition(SAVING)
+    props.bookInterview(props.id, interview)
+    .then (() => {
+      transition(SHOW)
+    })
+    .catch(() => {
+      transition(ERROR_EDIT)
+    })
   }
 
   return (
@@ -65,11 +79,16 @@ export default function Appointment(props) {
   {mode === DELETING && <Status message = "Deleting" />}
   {mode === CONFIRM && <Confirm onCancel={()=>{back()}}  onConfirm= {deleteCard} />}
   {mode === EDITING  && <Form interviewers={props.interviewers} interviewer={props.interview.interviewer.id}
-                       onConfirm= {save} onCancel={()=>{back()}}
+                       onConfirm= {edit} onCancel={()=>{back()}}
                         name = {props.interview.student}/> }
   {mode === ERROR_SAVE && <Error message = "There was an error to crete the interview" onClose={()=>{transition(EMPTY)}}/>}
        
-  {mode === ERROR_DELETE && <Error message = "There was an error to deleting the interview" onClose={()=>{transition(SHOW)}}/>}         
+  {mode === ERROR_DELETE && <Error message = "There was an error to delete the interview" onClose={()=>{transition(SHOW)}}/>} 
+  
+  {mode === ERROR_EDIT && <Error message = "There was an error to edit the interview" onClose={()=>{transition(SHOW)}}/>}
+
+       
+        
   
   {mode === SHOW && (
     <Show

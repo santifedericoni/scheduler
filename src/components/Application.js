@@ -24,10 +24,9 @@ export default function Application(props) {
       ])
       .then ((all) => {
         setState(Object.assign({}, state, { appointments: all[1].data, days: all[0].data, interviewers: all[2].data}))
-          console.log('test', state);
       })
     }, [] );
-    
+
 
     function bookInterview(appointmentId, interview) {
       const appointment = {
@@ -61,27 +60,28 @@ export default function Application(props) {
     }
 
     function cancelInterview (appointmentId){  
-
-      // const days = state.days.map(day =>  {
-        
-      //   if (day.appointments.includes(appointmentId) && !state.appointments[appointmentId].interview) {
-      //     return {
-      //       ...day,
-      //       spots: day.spots + 1
-      //     };
-      //   } else {
-      //     return day;
-      //   }
-      // });
-      return axios.delete(`http://localhost:8080/api/appointments/${appointmentId}`)
-      // .then (()=> {
-      //   setState({
-      //     ...state,
-      //     appointments,
-      //     days 
-      //   });
-      // })
-
+      const appointment = {
+        ...state.appointments[appointmentId],
+        interview: null
+      };
+      const appointments = {
+        ...state.appointments,
+        [appointmentId]: appointment
+      };
+      const days = state.days.map(day =>  {
+          return {
+            ...day,
+            spots: day.spots + 1
+          };
+      });
+      return axios.delete(`http://localhost:8080/api/appointments/${appointmentId}`,appointment)
+      .then (()=> {
+        setState({
+          ...state,
+          appointments,
+          days 
+        });
+      })
     }
  
     const appointments = getAppointmentsForDay(state, state.day);
