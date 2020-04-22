@@ -67,13 +67,13 @@ describe("Form", () => {
   });
 
   it("calls onCancel and resets the input field", () => {
-    const onCancel = jest.fn();
+    const cancel = jest.fn();
     const { getByText, getByPlaceholderText, queryByText } = render(
       <Form
         interviewers={interviewers}
         name="Lydia Mill-Jones"
         onSave={jest.fn()}
-        onCancel={onCancel}
+        cancel={cancel}
       />
     );
 
@@ -89,6 +89,6 @@ describe("Form", () => {
 
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
 
-    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(cancel).toHaveBeenCalledTimes(1);
   });
 });
